@@ -5,10 +5,14 @@ import os
 import json
 import csv
 import time
-
+import urllib3
 from datetime import date
 
 import requests
+
+# 跳過 SSL 驗證
+urllib3.disable_warnings()
+requests.packages.urllib3.disable_warnings()
 
 class CrawlerController(object):
     '''Split targets into several Crawler, avoid request url too long'''
@@ -38,7 +42,8 @@ class Crawler(object):
     def get_data(self):
         try:
             # Get original page to get session
-            req = requests.session()
+            req = requests.Session()
+            req.verify = False  # 跳過 SSL 驗證
             req.get('http://mis.twse.com.tw/stock/index.jsp',
                     headers={'Accept-Language': 'zh-TW'})
 
